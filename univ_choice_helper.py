@@ -75,26 +75,78 @@ urls = [
     "https://www.yonsei.ac.kr/",
     "https://www.inha.ac.kr/"
 ]
-df['학교 홈페이지'] = [f'<a href="{url}" target="_blank">{url}</a>' for url in urls]
 
-def df_to_html_table(df, col_widths=[25, 1200, 600, 950, 50]):
-    html = '<table border="1" style="border-collapse:collapse;">'
+df['학교 홈페이지'] = [f'<a href="{url}" target="_blank">{url}</a>' for url in urls]
+def df_to_html_table(df):
+    # 반응형 테이블을 위한 스타일 적용
+    html = '''
+    <style>
+    .responsive-table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin-bottom: 1em;
+    }
+    table.responsive-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 1.1em;
+        min-width: 600px;
+    }
+    table.responsive-table th, table.responsive-table td {
+        text-align: center;
+        padding: 12px 8px;
+        border: 1px solid #ddd;
+        vertical-align: middle;
+        word-break: break-all;
+    }
+    table.responsive-table th {
+        background: #f5f6fa;
+        font-weight: bold;
+    }
+    img {
+        max-width: 100px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+    @media screen and (max-width: 900px) {
+        table.responsive-table {
+            font-size: 0.95em;
+            min-width: 400px;
+        }
+        img {
+            max-width: 60px;
+        }
+    }
+    @media screen and (max-width: 600px) {
+        table.responsive-table {
+            font-size: 0.85em;
+            min-width: 300px;
+        }
+        img {
+            max-width: 40px;
+        }
+    }
+    </style>
+    <div class="responsive-table-container">
+    <table class="responsive-table">
+    '''
+    # 헤더
     html += '<tr>'
-    for i, col in enumerate(df.columns):
-        width = f' style="width:{col_widths[i]}px;"' if col_widths else ''
-        html += f'<th{width}>{col}</th>'
+    for col in df.columns:
+        html += f'<th>{col}</th>'
     html += '</tr>'
+    # 데이터
     for row in df.values:
         html += '<tr>'
-        for i, val in enumerate(row):
-            width = f' style="width:{col_widths[i]}px;"' if col_widths else ''
-            html += f'<td{width}>{val}</td>'
+        for val in row:
+            html += f'<td>{val}</td>'
         html += '</tr>'
-    html += '</table>'
+    html += '</table></div>'
     return html
 
 # 출력
-st.markdown(df_to_html_table(df, col_widths=[25, 1200, 600, 950, 50]), unsafe_allow_html=True)
+st.markdown(df_to_html_table(df), unsafe_allow_html=True)
 st.write("----")
 
 # 입력 파트
