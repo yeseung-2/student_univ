@@ -78,7 +78,6 @@ urls = [
 
 df['학교 홈페이지'] = [f'<a href="{url}" target="_blank">{url}</a>' for url in urls]
 def df_to_html_table(df):
-    # 반응형 테이블을 위한 스타일 적용
     html = '''
     <style>
     .responsive-table-container {
@@ -89,42 +88,39 @@ def df_to_html_table(df):
     table.responsive-table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 1.1em;
+        font-size: 1em;
         min-width: 600px;
+        max-width: 100%;
     }
     table.responsive-table th, table.responsive-table td {
         text-align: center;
-        padding: 12px 8px;
+        padding: 10px 6px;
         border: 1px solid #ddd;
         vertical-align: middle;
-        word-break: break-all;
+        word-break: break-word;
+        font-size: 1em;
     }
     table.responsive-table th {
         background: #f5f6fa;
         font-weight: bold;
     }
     img {
-        max-width: 100px;
+        max-width: 60px;
         height: auto;
         display: block;
         margin: 0 auto;
     }
-    @media screen and (max-width: 900px) {
-        table.responsive-table {
-            font-size: 0.95em;
-            min-width: 400px;
-        }
-        img {
-            max-width: 60px;
-        }
-    }
     @media screen and (max-width: 600px) {
         table.responsive-table {
             font-size: 0.85em;
-            min-width: 300px;
+            min-width: 400px;
         }
         img {
-            max-width: 40px;
+            max-width: 36px;
+        }
+        table.responsive-table th, table.responsive-table td {
+            padding: 6px 2px;
+            font-size: 0.85em;
         }
     }
     </style>
