@@ -77,55 +77,99 @@ urls = [
 ]
 
 df['학교 홈페이지'] = [f'<a href="{url}" target="_blank">{url}</a>' for url in urls]
-def df_to_html_table(df):
+
+# 모바일(세로 카드형)
+def df_to_vertical_html(df):
     html = '''
     <style>
-    .responsive-table-container {
+    .vertical-table-container {
+        width: 100%;
+        margin-bottom: 1em;
+        font-family: Arial, sans-serif;
+    }
+    .vertical-table {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+        background-color: #fff;
+    }
+    .vertical-table .row-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+    .vertical-table .row-value {
+        margin-bottom: 10px;
+        word-break: break-word;
+    }
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+    @media(min-width: 768px) {
+        .vertical-table-container {
+            display: none;
+        }
+    }
+    </style>
+    <div class="vertical-table-container">
+    '''
+    for idx, row in df.iterrows():
+        html += '<div class="vertical-table">'
+        for col in df.columns:
+            html += f'<div class="row-label">{col}</div>'
+            html += f'<div class="row-value">{row[col]}</div>'
+        html += '</div>'
+    html += '</div>'
+    return html
+
+# 데스크톱(가로형 표)
+def df_to_horizontal_html(df):
+    html = '''
+    <style>
+    .horizontal-table-container {
         width: 100%;
         overflow-x: auto;
         margin-bottom: 1em;
     }
-    table.responsive-table {
+    table.horizontal-table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 1em;
+        font-size: 1.1em;
         min-width: 600px;
-        max-width: 100%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.07);
     }
-    table.responsive-table th, table.responsive-table td {
+    table.horizontal-table th, table.horizontal-table td {
         text-align: center;
-        padding: 10px 6px;
+        padding: 12px 8px;
         border: 1px solid #ddd;
         vertical-align: middle;
         word-break: break-word;
-        font-size: 1em;
     }
-    table.responsive-table th {
+    table.horizontal-table th {
         background: #f5f6fa;
         font-weight: bold;
     }
     img {
-        max-width: 60px;
+        max-width: 100px;
         height: auto;
         display: block;
         margin: 0 auto;
+        border-radius: 4px;
     }
-    @media screen and (max-width: 600px) {
-        table.responsive-table {
-            font-size: 0.85em;
-            min-width: 400px;
-        }
-        img {
-            max-width: 36px;
-        }
-        table.responsive-table th, table.responsive-table td {
-            padding: 6px 2px;
-            font-size: 0.85em;
+    @media(max-width: 767px) {
+        .horizontal-table-container {
+            display: none;
         }
     }
     </style>
-    <div class="responsive-table-container">
-    <table class="responsive-table">
+    <div class="horizontal-table-container">
+    <table class="horizontal-table">
     '''
     # 헤더
     html += '<tr>'
@@ -141,9 +185,8 @@ def df_to_html_table(df):
     html += '</table></div>'
     return html
 
-# 출력
-st.markdown(df_to_html_table(df), unsafe_allow_html=True)
-st.write("----")
+st.markdown(df_to_vertical_html(df), unsafe_allow_html=True)
+st.markdown(df_to_horizontal_html(df), unsafe_allow_html=True)
 
 # 입력 파트
 st.markdown("### ✍️ 원하는 대학과 학과를 입력해주세요 (1~3순위)")
