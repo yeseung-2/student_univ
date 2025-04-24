@@ -82,6 +82,9 @@ df['학교 홈페이지'] = [f'<a href="{url}" target="_blank">{url}</a>' for ur
 def df_to_vertical_html(df):
     html = '''
     <style>
+    @media (min-width: 768px) {
+        .vertical-table-container {display: none;}
+    }
     .vertical-table-container {
         width: 100%;
         margin-bottom: 1em;
@@ -111,11 +114,6 @@ def df_to_vertical_html(df):
         margin-bottom: 10px;
         border-radius: 4px;
     }
-    @media(min-width: 768px) {
-        .vertical-table-container {
-            display: none;
-        }
-    }
     </style>
     <div class="vertical-table-container">
     '''
@@ -128,10 +126,13 @@ def df_to_vertical_html(df):
     html += '</div>'
     return html
 
-# 데스크톱(가로형 표)
+# 가로형(데스크톱) 표
 def df_to_horizontal_html(df):
     html = '''
     <style>
+    @media (max-width: 767px) {
+        .horizontal-table-container {display: none;}
+    }
     .horizontal-table-container {
         width: 100%;
         overflow-x: auto;
@@ -162,11 +163,6 @@ def df_to_horizontal_html(df):
         margin: 0 auto;
         border-radius: 4px;
     }
-    @media(max-width: 767px) {
-        .horizontal-table-container {
-            display: none;
-        }
-    }
     </style>
     <div class="horizontal-table-container">
     <table class="horizontal-table">
@@ -185,9 +181,9 @@ def df_to_horizontal_html(df):
     html += '</table></div>'
     return html
 
+# 두 표를 모두 렌더링
 st.markdown(df_to_vertical_html(df), unsafe_allow_html=True)
 st.markdown(df_to_horizontal_html(df), unsafe_allow_html=True)
-
 # 입력 파트
 st.markdown("### ✍️ 원하는 대학과 학과를 입력해주세요 (1~3순위)")
 
@@ -234,3 +230,4 @@ for idx, row in st.session_state.data.iterrows():
         st.session_state.data = st.session_state.data.drop(idx).reset_index(drop=True)
         save_data(st.session_state.data)
         st.rerun()
+
